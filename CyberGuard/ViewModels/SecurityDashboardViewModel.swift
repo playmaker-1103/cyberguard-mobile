@@ -1,4 +1,5 @@
-import Foundation
+import SwiftUI
+import Combine
 
 @MainActor
 final class SecurityDashboardViewModel: ObservableObject {
@@ -15,7 +16,28 @@ final class SecurityDashboardViewModel: ObservableObject {
         ProtectionTask(title: "Configure Device Auto-Lock", detail: "Set lock timeout to 30 seconds.", isCompleted: false)
     ]
 
-    @Published var securityTips: [SecurityTip] = []
+    @Published var securityTips: [SecurityTip] = [
+        SecurityTip(
+            title: "Prioritize MFA for High-Value Accounts",
+            detail: "Start with email, banking, and developer tools where account takeover risk is highest.",
+            iconName: "person.badge.shield.checkmark"
+        ),
+        SecurityTip(
+            title: "Use Unique Passwords",
+            detail: "Adopt a password manager and generate unique credentials for every service.",
+            iconName: "key.fill"
+        ),
+        SecurityTip(
+            title: "Turn On Breach Monitoring",
+            detail: "Track leaked credentials and rotate impacted passwords immediately.",
+            iconName: "eye.trianglebadge.exclamationmark"
+        ),
+        SecurityTip(
+            title: "Harden Mobile Browsing",
+            detail: "Avoid unknown links and keep iOS plus browser updates enabled.",
+            iconName: "safari.fill"
+        )
+    ]
     @Published var isRunningScan = false
     @Published var lastScanResult: ScanResult?
 
