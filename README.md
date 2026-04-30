@@ -1,81 +1,72 @@
 # CyberGuard Mobile
 
-CyberGuard Mobile is a native iOS SwiftUI portfolio project that showcases a mobile cybersecurity dashboard with actionable threat monitoring and account-protection workflows.
+CyberGuard Mobile is a SwiftUI iOS portfolio app that simulates a cybersecurity dashboard with alert triage, account-protection workflows, and risk scoring.
 
 ## Features
 
-- **Dashboard Metrics**
-  - Calculated security score (0–100) based on active threat severity and incomplete protection tasks
-  - Dynamic risk level indicator (Low / Moderate / High)
-  - Active threat count, open account issues, and completed protection tasks
-- **Threat Alerts**
-  - List of mock cybersecurity alerts with severity badges
-  - Severity filtering via segmented control (**All, High, Medium, Low**)
-  - Search alerts by title or description
-  - Tap alert to open a full **Alert Detail** screen
-  - Resolve alerts with **Mark as Resolved**, removing them from active alert tracking
-- **Account Protection**
-  - Interactive checklist for account hardening tasks
-  - Toggle completion to immediately affect dashboard security score and risk state
-- **AI Security Tips**
-  - Mock AI-style recommendations for practical mobile and account security improvements
-- **Local Data Only**
-  - No networking layer yet (intentionally scoped for portfolio clarity)
+- Multi-tab app: Dashboard, Threat Alerts, Account Protection, AI Tips, Settings
+- Rule-based risk score engine (0...100 clamp) driven by active alerts and incomplete tasks
+- Simulated security scan (`Run Security Scan`) with async loading state and new generated alert
+- Alert lifecycle support: Active vs Resolved alerts
+- Search and severity filters for alerts
+- Alert detail view with rule-based recommendation engine and resolve action
+- AppStorage-backed settings for notifications, biometric lock simulation, and reminders
+- Local mock data only (no networking)
 
 ## Tech Stack
 
-- **Language:** Swift
-- **UI Framework:** SwiftUI
-- **Architecture:** MVVM
-- **Platform:** iOS
+- Swift
+- SwiftUI
+- XCTest
+- MVVM + Services
 
-## Architecture (MVVM)
+## Architecture
 
-The app is organized into clear layers:
+- `Models/`: data contracts (`ThreatAlert`, `ProtectionTask`, `SecurityTip`)
+- `ViewModels/`: UI state and actions (`SecurityDashboardViewModel`)
+- `Services/`:
+  - `RiskScoringService`: encapsulates risk formula rules
+  - `RecommendationService`: generates category/severity-based recommendations
+  - `SecurityStorageService`: placeholder persistence abstraction for future expansion
+- `Views/`: screen and reusable component layer
 
-- **Models** (`Models/`)
-  - `ThreatAlert.swift`: threat item + severity + recommended action data
-  - `ProtectionTask.swift`: checklist item and completion state
-  - `SecurityTip.swift`: AI recommendation card content
-- **ViewModel** (`ViewModels/`)
-  - `SecurityDashboardViewModel.swift`: source of truth for local state, computed metrics (score/risk/counts), and mutation actions (`toggleTask`, `resolveAlert`)
-- **Views** (`Views/` + `ContentView.swift`)
-  - `ContentView.swift`: root `TabView` container
-  - `DashboardView.swift`: overview cards for score and metrics
-  - `ThreatAlertsView.swift`: searchable/filterable alert feed
-  - `AlertDetailView.swift`: detailed alert context + resolution action
-  - `AccountProtectionView.swift`: interactive protection checklist
-  - `AISecurityTipsView.swift`: AI tips feed
-  - `SharedComponents.swift`: reusable UI card component
+## Risk Scoring Rules
 
-## Security Score Formula
+Base score starts at **100**:
+- High alert: **-20**
+- Medium alert: **-10**
+- Low alert: **-5**
+- Each incomplete task: **-8**
+- Clamp final score between **0** and **100**
 
-Starting score: **100**
+## Unit Tests
 
-- High severity alert: **-20**
-- Medium severity alert: **-10**
-- Low severity alert: **-5**
-- Each incomplete protection task: **-8**
+Added test files for:
+- Risk score calculation
+- Recommendation generation
+- Task toggle behavior
+- Active/resolved alert lifecycle behavior
 
-Final score is clamped to **0...100**.
+> Note: Configure/enable the `CyberGuardTests` target in Xcode if it is not already present in your local project settings.
 
-## How to Run
+## Run Instructions
 
 1. Open `CyberGuard.xcodeproj` in Xcode.
-2. Choose an iOS Simulator device (for example, iPhone 16).
-3. Run the app with **Cmd + R**.
+2. Choose an iOS simulator (e.g., iPhone 16).
+3. Press `Cmd + R` to run.
+4. Press `Cmd + U` to run tests (after test target is configured).
 
-## Portfolio CV Bullet Points
+## CV Bullet Points
 
-- Built a native iOS cybersecurity dashboard app with SwiftUI and a multi-tab architecture for threat monitoring, account protection, and AI security coaching.
-- Implemented MVVM state management with computed risk scoring and real-time UI updates driven by alert severity and task completion.
-- Delivered interactive threat workflows including severity filters, search, drill-down alert details, and in-app resolution actions.
-- Designed modern, reusable SwiftUI components using SF Symbols, rounded cards, and dynamic system colors for accessibility-friendly UI.
+- Built a SwiftUI cybersecurity dashboard app with MVVM + Services architecture and state-driven UI.
+- Implemented a rule-based risk scoring engine and alert lifecycle (active/resolved) for realistic dashboard behavior.
+- Developed searchable, filterable alert triage workflows with detail drill-down and rule-based recommendations.
+- Added async security scan simulation and persistent user preferences with AppStorage.
 
-## Future Improvements
+## Future Roadmap
 
-- Persist data with SwiftData/Core Data for offline session continuity.
-- Add local notifications for high-severity alerts and stale unresolved items.
-- Integrate real backend threat feeds and account telemetry APIs.
-- Add authentication and secure settings for personalized dashboards.
-- Introduce unit/UI tests for score logic, filtering, search, and alert resolution flows.
+- Persist alerts/tasks with SwiftData or Core Data
+- Add local notifications for high-risk events
+- Integrate real backend threat intelligence APIs
+- Add authentication and biometric enforcement
+- Expand automated test coverage and UI tests

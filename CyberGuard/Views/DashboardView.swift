@@ -18,6 +18,22 @@ struct DashboardView: View {
                         InfoCard(title: "Open Issues", value: "\(viewModel.openIssueCount)", iconName: "person.crop.circle.badge.exclamationmark", color: .yellow)
                         InfoCard(title: "Tasks Completed", value: "\(viewModel.completedTaskCount)", iconName: "checkmark.seal.fill", color: .green)
                     }
+
+                    Button {
+                        Task { await viewModel.runSecurityScan() }
+                    } label: {
+                        HStack {
+                            if viewModel.isRunningScan { ProgressView().tint(.white) }
+                            Text(viewModel.isRunningScan ? "Running Security Scan..." : "Run Security Scan")
+                                .fontWeight(.semibold)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .foregroundStyle(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    }
+                    .disabled(viewModel.isRunningScan)
                 }
                 .padding()
             }
