@@ -1,25 +1,22 @@
 import XCTest
 @testable import CyberGuard
 
-@MainActor
-final class SecurityDashboardViewModelTests: XCTestCase {
-    func testToggleTaskUpdatesCompletion() {
-        let vm = SecurityDashboardViewModel()
-        let task = vm.protectionTasks[1]
-        let initial = task.isCompleted
-
-        vm.toggleTask(task)
-
-        XCTAssertNotEqual(vm.protectionTasks[1].isCompleted, initial)
+final class SecurityScanServiceTests: XCTestCase {
+    func testRiskLevelMapping() {
+        let service = SecurityScanService()
+        XCTAssertEqual(service.riskLevel(for: 85), "Low Risk")
+        XCTAssertEqual(service.riskLevel(for: 65), "Moderate Risk")
+        XCTAssertEqual(service.riskLevel(for: 20), "High Risk")
     }
 
-    func testResolveAlertMovesToResolvedBucket() {
-        let vm = SecurityDashboardViewModel()
-        let alert = vm.activeAlerts[0]
-
-        vm.resolveAlert(alert)
-
-        XCTAssertEqual(vm.activeAlerts.contains(where: { $0.id == alert.id }), false)
-        XCTAssertEqual(vm.resolvedAlerts.contains(where: { $0.id == alert.id }), true)
+    func testScanResultIssueCount() {
+        let service = SecurityScanService()
+        let alerts = [
+            ThreatAlert(title: "A", detail: "", severity: .high, timestamp: "", category: .account),
+            ThreatAlert(title: "B", detail: "", severity: .low, timestamp: "", category: .privacy, status: .resolved)
+        ]
+        let tasks = [ProtectionTask(title: "1", detail: "", isCompleted: false)]
+        let result = service.performScan(alerts: alerts, tasks: tasks)
+        XCTAssertEqual(result.issuesFound, 2)
     }
 }

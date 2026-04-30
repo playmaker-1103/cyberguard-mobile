@@ -2,10 +2,9 @@ import XCTest
 @testable import CyberGuard
 
 final class RecommendationServiceTests: XCTestCase {
-    func testSuspiciousLoginRecommendationContainsMFA() {
+    func testRecommendationsIncludeVPNForNetwork() {
         let service = RecommendationService()
-        let alert = ThreatAlert(title: "Suspicious Login", detail: "", severity: .high, timestamp: "", category: .suspiciousLogin)
-
-        XCTAssertTrue(service.recommendation(for: alert).localizedCaseInsensitiveContains("MFA"))
+        let recs = service.recommendations(for: [.network])
+        XCTAssertTrue(recs.joined().localizedCaseInsensitiveContains("VPN"))
     }
 }

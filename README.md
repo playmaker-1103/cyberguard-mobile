@@ -1,72 +1,71 @@
 # CyberGuard Mobile
 
-CyberGuard Mobile is a SwiftUI iOS portfolio app that simulates a cybersecurity dashboard with alert triage, account-protection workflows, and risk scoring.
+CyberGuard Mobile is a SwiftUI portfolio app demonstrating a **simulated rule-based cybersecurity dashboard** for internship-level mobile engineering projects.
 
 ## Features
+- Dashboard with rule-based score, risk level, issue counts, and scan summary
+- Threat alerts with active/resolved lifecycle, severity filters, and search
+- Alert detail with category-based recommendations
+- Account protection checklist that affects risk score
+- AI tips and settings (AppStorage toggles)
+- **Simulated Security Scan** (not a real device scan)
 
-- Multi-tab app: Dashboard, Threat Alerts, Account Protection, AI Tips, Settings
-- Rule-based risk score engine (0...100 clamp) driven by active alerts and incomplete tasks
-- Simulated security scan (`Run Security Scan`) with async loading state and new generated alert
-- Alert lifecycle support: Active vs Resolved alerts
-- Search and severity filters for alerts
-- Alert detail view with rule-based recommendation engine and resolve action
-- AppStorage-backed settings for notifications, biometric lock simulation, and reminders
-- Local mock data only (no networking)
-
-## Tech Stack
-
-- Swift
-- SwiftUI
-- XCTest
-- MVVM + Services
-
-## Architecture
-
-- `Models/`: data contracts (`ThreatAlert`, `ProtectionTask`, `SecurityTip`)
-- `ViewModels/`: UI state and actions (`SecurityDashboardViewModel`)
+## MVVM + Services Architecture
+- `Models/`: `ThreatAlert`, `ProtectionTask`, `SecurityTip`, `ScanResult`
+- `ViewModels/`: `SecurityDashboardViewModel`
 - `Services/`:
-  - `RiskScoringService`: encapsulates risk formula rules
-  - `RecommendationService`: generates category/severity-based recommendations
-  - `SecurityStorageService`: placeholder persistence abstraction for future expansion
-- `Views/`: screen and reusable component layer
+  - `RiskScoringService`
+  - `RecommendationService`
+  - `SecurityScanService`
+  - `SecurityStorageService` (future persistence placeholder)
 
-## Risk Scoring Rules
+## Security Scan Algorithm (Simulated)
+1. Analyze **active threat alerts** and **incomplete protection tasks**.
+2. Score starts at **100**.
+3. Subtract penalties:
+   - High alert: -20
+   - Medium alert: -10
+   - Low alert: -5
+   - Each incomplete task: -8
+4. Clamp final score to **0...100**.
+5. Map risk level:
+   - `>= 80` => **Low Risk**
+   - `>= 60 and < 80` => **Moderate Risk**
+   - `< 60` => **High Risk**
+6. Produce `ScanResult` with:
+   - `finalScore`
+   - `riskLevel`
+   - `issuesFound`
+   - `summary`
+   - `generatedRecommendations`
+   - `generatedAlerts` (if rule thresholds are met)
 
-Base score starts at **100**:
-- High alert: **-20**
-- Medium alert: **-10**
-- Low alert: **-5**
-- Each incomplete task: **-8**
-- Clamp final score between **0** and **100**
+## Recommendation Rules
+- Account risk -> enable MFA + reset password
+- Network risk -> use VPN + avoid sensitive activity
+- Password risk -> password manager + rotate reused passwords
+- Phishing risk -> avoid unknown links + review browser protection
+- Privacy risk -> review app permissions
+- Device risk -> enable auto-lock + update iOS
 
 ## Unit Tests
-
-Added test files for:
 - Risk score calculation
+- Risk level mapping
 - Recommendation generation
-- Task toggle behavior
-- Active/resolved alert lifecycle behavior
+- Scan issue-count validation
 
-> Note: Configure/enable the `CyberGuardTests` target in Xcode if it is not already present in your local project settings.
-
-## Run Instructions
-
+## Run
 1. Open `CyberGuard.xcodeproj` in Xcode.
-2. Choose an iOS simulator (e.g., iPhone 16).
-3. Press `Cmd + R` to run.
-4. Press `Cmd + U` to run tests (after test target is configured).
+2. Choose a simulator.
+3. `Cmd + R` to run.
+4. `Cmd + U` to run tests.
 
 ## CV Bullet Points
+- Built a SwiftUI cybersecurity dashboard using MVVM + Services and rule-based scan logic.
+- Implemented deterministic risk scoring and actionable recommendation generation.
+- Designed alert lifecycle workflows and scan summaries suitable for product demos.
 
-- Built a SwiftUI cybersecurity dashboard app with MVVM + Services architecture and state-driven UI.
-- Implemented a rule-based risk scoring engine and alert lifecycle (active/resolved) for realistic dashboard behavior.
-- Developed searchable, filterable alert triage workflows with detail drill-down and rule-based recommendations.
-- Added async security scan simulation and persistent user preferences with AppStorage.
-
-## Future Roadmap
-
-- Persist alerts/tasks with SwiftData or Core Data
-- Add local notifications for high-risk events
-- Integrate real backend threat intelligence APIs
-- Add authentication and biometric enforcement
-- Expand automated test coverage and UI tests
+## Roadmap
+- Persist scan history with SwiftData/Core Data
+- Add UI tests and richer simulated scan heuristics
+- Integrate real backend intelligence feeds

@@ -9,10 +9,12 @@ enum ThreatSeverity: String, CaseIterable, Identifiable {
 }
 
 enum AlertCategory: String, CaseIterable, Identifiable {
-    case suspiciousLogin = "Suspicious Login"
-    case unsafeWiFi = "Unsafe Wi-Fi"
-    case passwordReuse = "Password Reuse"
-    case malware = "Potential Malware"
+    case account = "Account"
+    case network = "Network"
+    case password = "Password"
+    case phishing = "Phishing"
+    case privacy = "Privacy"
+    case device = "Device"
     case unknown = "General Threat"
 
     var id: String { rawValue }
@@ -34,15 +36,7 @@ struct ThreatAlert: Identifiable {
     let category: AlertCategory
     var status: AlertStatus
 
-    init(
-        id: UUID = UUID(),
-        title: String,
-        detail: String,
-        severity: ThreatSeverity,
-        timestamp: String,
-        category: AlertCategory,
-        status: AlertStatus = .active
-    ) {
+    init(id: UUID = UUID(), title: String, detail: String, severity: ThreatSeverity, timestamp: String, category: AlertCategory, status: AlertStatus = .active) {
         self.id = id
         self.title = title
         self.detail = detail
@@ -51,4 +45,13 @@ struct ThreatAlert: Identifiable {
         self.category = category
         self.status = status
     }
+}
+
+struct ScanResult {
+    let finalScore: Int
+    let riskLevel: String
+    let issuesFound: Int
+    let summary: String
+    let generatedRecommendations: [String]
+    let generatedAlerts: [ThreatAlert]
 }
