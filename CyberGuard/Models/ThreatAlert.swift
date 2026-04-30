@@ -14,4 +14,5 @@ struct ThreatAlert: Identifiable {
     let detail: String
     let severity: ThreatSeverity
     let timestamp: String
+    let recommendedAction: String
 }

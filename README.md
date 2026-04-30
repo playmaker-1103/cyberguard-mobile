@@ -1,55 +1,81 @@
 # CyberGuard Mobile
 
-CyberGuard Mobile is a native iOS SwiftUI portfolio project that presents a mobile cybersecurity dashboard experience. It is designed to showcase product thinking, clean UI implementation, and foundational mobile architecture for a Software Engineering Intern – Mobile role.
+CyberGuard Mobile is a native iOS SwiftUI portfolio project that showcases a mobile cybersecurity dashboard with actionable threat monitoring and account-protection workflows.
 
 ## Features
 
-- **Dashboard** with key security metrics:
-  - Security score
-  - Risk level
-  - Threat alert count
-  - Open account issue count
-  - Completed protection task count
-- **Threat Alerts** tab with mock alerts and severity badges (Low, Medium, High)
-- **Account Protection** checklist with interactive task completion toggles
-- **AI Security Tips** tab with mock AI-style recommendations for safer account and device behavior
-- Local mock data only (no networking)
+- **Dashboard Metrics**
+  - Calculated security score (0–100) based on active threat severity and incomplete protection tasks
+  - Dynamic risk level indicator (Low / Moderate / High)
+  - Active threat count, open account issues, and completed protection tasks
+- **Threat Alerts**
+  - List of mock cybersecurity alerts with severity badges
+  - Severity filtering via segmented control (**All, High, Medium, Low**)
+  - Search alerts by title or description
+  - Tap alert to open a full **Alert Detail** screen
+  - Resolve alerts with **Mark as Resolved**, removing them from active alert tracking
+- **Account Protection**
+  - Interactive checklist for account hardening tasks
+  - Toggle completion to immediately affect dashboard security score and risk state
+- **AI Security Tips**
+  - Mock AI-style recommendations for practical mobile and account security improvements
+- **Local Data Only**
+  - No networking layer yet (intentionally scoped for portfolio clarity)
 
 ## Tech Stack
 
 - **Language:** Swift
 - **UI Framework:** SwiftUI
-- **Pattern:** MVVM (lightweight, portfolio-friendly)
+- **Architecture:** MVVM
 - **Platform:** iOS
 
-## Architecture
+## Architecture (MVVM)
 
-The project uses a simple MVVM structure:
+The app is organized into clear layers:
 
-- `Models/`
-  - `ThreatAlert.swift`
-  - `ProtectionTask.swift`
-  - `SecurityTip.swift`
-- `ViewModels/`
-  - `SecurityDashboardViewModel.swift`
-- `Views/`
-  - `DashboardView.swift`
-  - `ThreatAlertsView.swift`
-  - `AccountProtectionView.swift`
-  - `AISecurityTipsView.swift`
-  - `SharedComponents.swift`
+- **Models** (`Models/`)
+  - `ThreatAlert.swift`: threat item + severity + recommended action data
+  - `ProtectionTask.swift`: checklist item and completion state
+  - `SecurityTip.swift`: AI recommendation card content
+- **ViewModel** (`ViewModels/`)
+  - `SecurityDashboardViewModel.swift`: source of truth for local state, computed metrics (score/risk/counts), and mutation actions (`toggleTask`, `resolveAlert`)
+- **Views** (`Views/` + `ContentView.swift`)
+  - `ContentView.swift`: root `TabView` container
+  - `DashboardView.swift`: overview cards for score and metrics
+  - `ThreatAlertsView.swift`: searchable/filterable alert feed
+  - `AlertDetailView.swift`: detailed alert context + resolution action
+  - `AccountProtectionView.swift`: interactive protection checklist
+  - `AISecurityTipsView.swift`: AI tips feed
+  - `SharedComponents.swift`: reusable UI card component
 
-`ContentView.swift` hosts the root `TabView` and wires shared state from the view model into each screen.
+## Security Score Formula
+
+Starting score: **100**
+
+- High severity alert: **-20**
+- Medium severity alert: **-10**
+- Low severity alert: **-5**
+- Each incomplete protection task: **-8**
+
+Final score is clamped to **0...100**.
 
 ## How to Run
 
 1. Open `CyberGuard.xcodeproj` in Xcode.
-2. Select an iOS Simulator (for example, iPhone 16).
-3. Build and run with **Cmd + R**.
+2. Choose an iOS Simulator device (for example, iPhone 16).
+3. Run the app with **Cmd + R**.
 
-## CV Bullet Points
+## Portfolio CV Bullet Points
 
-- Built a native iOS cybersecurity dashboard app using Swift and SwiftUI with a multi-tab user experience.
-- Implemented a lightweight MVVM architecture to separate models, UI state, and views for maintainability.
-- Designed modern SwiftUI card-based interfaces with SF Symbols, dynamic system colors, and rounded visual components.
-- Delivered interactive security workflows, including threat severity visualization and account-protection task tracking.
+- Built a native iOS cybersecurity dashboard app with SwiftUI and a multi-tab architecture for threat monitoring, account protection, and AI security coaching.
+- Implemented MVVM state management with computed risk scoring and real-time UI updates driven by alert severity and task completion.
+- Delivered interactive threat workflows including severity filters, search, drill-down alert details, and in-app resolution actions.
+- Designed modern, reusable SwiftUI components using SF Symbols, rounded cards, and dynamic system colors for accessibility-friendly UI.
+
+## Future Improvements
+
+- Persist data with SwiftData/Core Data for offline session continuity.
+- Add local notifications for high-severity alerts and stale unresolved items.
+- Integrate real backend threat feeds and account telemetry APIs.
+- Add authentication and secure settings for personalized dashboards.
+- Introduce unit/UI tests for score logic, filtering, search, and alert resolution flows.
